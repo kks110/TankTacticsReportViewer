@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankTacticsReportViewer", "TankTacticsReportViewer\TankTacticsReportViewer.csproj", "{0DAD9F44-69CD-47B4-BDF8-F47670B97818}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DAD9F44-69CD-47B4-BDF8-F47670B97818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DAD9F44-69CD-47B4-BDF8-F47670B97818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DAD9F44-69CD-47B4-BDF8-F47670B97818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DAD9F44-69CD-47B4-BDF8-F47670B97818}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

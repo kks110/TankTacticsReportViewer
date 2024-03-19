@@ -1,0 +1,77 @@
+﻿@using TankTacticsReportViewer.Models
+
+<div class="card @borderColour() mb-3" style="max-width: 240px;">
+    <div class="card-header">@player.name</div>
+    <ul class="list-group list-group-flush">
+        @if (votedForPeace)
+        {
+            <li class="list-group-item">
+                <img src="images/dove.png" alt="skull" /> Voted for peace!
+            </li>
+        }
+        @if (player.isDead())
+        {
+            <li class="list-group-item">
+                <img src="images/skull.png" alt="skull" /> Dead!
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item">
+                <img src="images/heart.png" alt="heart" /> HP: @player.hp
+            </li>
+        }
+        <li class="list-group-item">
+            <img src="images/battery_small.png" alt="target" /> Energy: @player.energy
+        </li>
+        <li class="list-group-item">
+            <img src="images/target.png" alt="target" /> Range: @player.range
+        </li>
+        <li class="list-group-item">
+            <img src="images/bullets.png" alt="target" /> Shot count: @player.shot_count (Next shot cost: @if (player.shot_count == null) {} @calculateShotCost(player.shot_count))
+        </li>
+        @if (player.shot_count > 0)
+        {
+            <li class="list-group-item">
+                <img src="images/hourglass.png" alt="target" /> Shot timer: @player.shot_created_at
+            </li>
+        }
+        @if (player.isDisabled())
+        {
+            <li class="list-group-item">
+                <img src="images/disabled.png" alt="disabled" /> Disabled until: @player.disabled_until
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public Player player { get; set; }
+    
+    [Parameter]
+    public bool votedForPeace { get; set; }
+    
+    private string borderColour()
+    {
+        if (player.isDead())
+        {
+            return "bg-danger text-white";
+        }
+        if (player.isDisabled())
+        {
+            return "bg-warning";
+        }
+        if(votedForPeace)
+        {
+            return "bg-info";
+        }
+
+        return "bg-success text-white";
+    }
+
+    private int calculateShotCost(int? shotCount)
+    {
+        return shotCount == null ? 10 : 10 + (shotCount.Value * 5);
+    }
+}

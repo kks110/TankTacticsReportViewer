@@ -1,0 +1,60 @@
+﻿@using TankTacticsReportViewer.Models
+
+<div class="grid-cell" style="@borderString()">
+    <div>
+        <span class="text-wrap">
+            @player.name.Substring(0, Math.Min(9, player.name.Length))
+        </span>
+    </div>
+    <div>
+        @if (player.isDead())
+        {
+            <div>
+                Dead!
+                <img src="images/skull.png" alt="skull"/>
+            </div>
+        }
+        else
+        {
+            <div>
+                @player.hp
+                <img src="images/heart.png" alt="heart"/>
+                @if (player.isDisabled())
+                {
+                    <img style="padding-left: 5px" src="images/disabled.png" alt="disabled"/>
+                }
+            </div>
+        }
+
+    </div>
+    <div>
+        @player.range
+        <img src="images/target.png" alt="target"/>
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public Player player { get; set; }
+
+    [Parameter]
+    public bool commandRunner { get; set; }
+    
+    [Parameter]
+    public bool target { get; set; }
+
+    public String borderString()
+    {
+        if (commandRunner)
+        {
+            return "border: 2px solid green";
+        }
+        else if (target)
+        {
+            return "border: 2px solid red";
+        }
+
+        return "";
+    }
+}

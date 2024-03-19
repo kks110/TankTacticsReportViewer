@@ -1,0 +1,29 @@
+﻿@using TankTacticsReportViewer.Models
+
+<div class="grid-cell">
+    <div class="container d-flex align-items-center justify-content-center" style="padding: 5px 0 0;">
+        <img src="@cityImage()" alt="city" />
+    </div>
+    <div class="container d-flex align-items-center justify-content-center" style="padding: 0">
+        <span>@cityOwner()</span>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public City city { get; set; }
+
+    private string cityOwner()
+    {
+        if (city?.player != null)
+        {
+            return city.player.Substring(0, Math.Min(9, city.player.Length));
+        }
+        return "Unowned";
+    }
+
+    private string cityImage()
+    {
+        return city?.player != null ? "images/city_captured.png" : "images/city.png";
+    }
+}

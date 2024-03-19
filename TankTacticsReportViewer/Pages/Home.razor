@@ -1,0 +1,183 @@
+﻿@page "/"
+@using System.Text.Json
+@using TankTacticsReportViewer.Models
+@using TankTacticsReportViewer.Services
+@inject IJSRuntime JSRuntime
+@using TankTacticsReportViewer.Layout
+
+
+<InputFile OnChange="@LoadFile"/>
+
+@if (isLoading)
+{
+    <p>Uploading...</p>
+}
+
+@if (reports.Count > 0)
+{
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" disabled="@CantGoBackwards" @onclick="ButtonClickBack">Back</button>
+        <button type="button" class="btn btn-primary" disabled="@CantGoForwards" @onclick="ButtonClickForward">Forward</button>
+    </div>
+    
+    <h2>@reports[reports_index].timestamp @reports[reports_index].player_name ran the @reports[reports_index].command_run command</h2>
+    
+    <div class="container" style="margin: 0; max-width: 100%">
+        <div class="row align-items-start">
+            <div class="col">
+
+                
+                <table>
+                    <tr>
+                        <td>
+                            <GridCorner />
+                        </td>
+                        @for (int i = 0; i < reports[reports_index].game.max_x + 1; i++)
+                        {
+                            <td>
+                                <GridCoordinate coord="@i.ToString()" />
+                            </td>
+                        }
+                    </tr>
+                    @for (int y = 0; y < reports[reports_index].game.max_y + 1; y++)
+                    {
+                        <tr>
+                            @for (int x = 0; x < reports[reports_index].game.max_x + 1; x++)
+                            {
+                                if (x == 0)
+                                {
+                                    <td>
+                                        <GridCoordinate coord="@y.ToString()" />
+                                    </td>
+                                }
+                                <td>
+                                    @if (grid.ContainsKey((x, y))) {
+                                        @switch (grid[(x, y)]) 
+                                        {
+                                            case Player:
+                                                Player player = (Player)grid[(x, y)];
+                                                var commandRunner = reports[reports_index].player_name == player.name;
+                                                var target = reports[reports_index].target_name == player.name;
+                                                <GridCellPlayer player="@player" commandRunner="@commandRunner" target=@target />
+                                                break;
+
+                                            case EnergyCell: 
+                                                <GridCellEnergyCell />
+                                                break;
+                                                
+                                            case City: 
+                                                City city = (City)grid[(x, y)];
+                                                <GridCellCity city="@city" />
+                                                break;
+                                                
+                                            default: 
+                                                <GridCell />
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <GridCell />
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+
+            <div class="col">
+                <div class="row">
+                    @foreach (var player in playersList())
+                    {
+                        <div class="col-md-4">
+                            <PlayerCard player="player" votedForPeace="playerVotedForPeace(player)"/>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+    private List<BattleReport> reports = new();
+    
+    private bool isLoading;
+
+    private int reports_index = 0;
+
+    private bool CantGoBackwards = true;
+    private bool CantGoForwards = false;
+
+    private Dictionary<(int, int), object> grid;
+    
+    private void BuildGrid()
+    {
+        LoadGridData loader = new LoadGridData(reports[reports_index]);
+        grid = loader.grid;
+    }
+    
+    private void ButtonClickBack()
+    {
+        if (reports_index > 0)
+        {
+            CantGoForwards = false;
+            reports_index--;
+            BuildGrid();
+        }
+        if (reports_index == 0)
+        {
+            CantGoBackwards = true;
+        }
+    }
+    
+    private void ButtonClickForward()
+    {
+        if (reports_index < reports.Count - 1)
+        {
+            CantGoBackwards = false;
+            reports_index++;
+            BuildGrid();
+        }
+        if (reports_index == reports.Count - 1)
+        {
+            CantGoForwards = true;
+        }
+    }
+    
+    private async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        resetOnFileLoad();
+        isLoading = true;
+        BattleReportLoader loader = new BattleReportLoader();
+        reports = await loader.LoadFile(e);
+        JSRuntime.InvokeVoidAsync("console.log", JsonSerializer.Serialize(reports));
+        BuildGrid();
+        isLoading = false;
+    }
+    
+    private List<Player> playersList()
+    {
+        return reports[reports_index].players.OrderBy(p => p.name).ToList();
+    }
+    
+    private List<PeaceVote> peaceVotesList()
+    {
+        return reports[reports_index].peace_votes;
+    }
+    
+    private bool playerVotedForPeace(Player player)
+    {
+        return peaceVotesList().Any(pv => pv.player == player.name);
+    }
+    
+    private void resetOnFileLoad()
+    {
+        reports = new List<BattleReport>();
+        reports_index = 0;
+        CantGoBackwards = true;
+        CantGoForwards = false;
+    }
+}
