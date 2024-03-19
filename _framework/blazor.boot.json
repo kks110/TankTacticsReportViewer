@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "TankTacticsReportViewer",
   "resources": {
-    "hash": "sha256-oKSzuh26rJ4JphQYuw2H9NfLonFGzVvzVF1xx9i9O7A=",
+    "hash": "sha256-R67v1ZsH8xl1aSlprmrdQkF+vV+Czl9wUrHVxj6vLBw=",
     "jsModuleNative": {
       "dotnet.native.8.0.3.begwf32u1f.js": "sha256-0MFKts/CuiiMzMBrowUd9UOwsS7ysqVk5qGfHK/bG5U="
     },
@@ -46,7 +46,7 @@
       "System.Text.Encodings.Web.wasm": "sha256-6Y6/Faa3h5Vm0B7AAY9NZHdFTUWBX7c8paNgUxSC7wo=",
       "System.Text.Json.wasm": "sha256-UldQYyLU/Ynfy00LeY9cACCq3i5boN5iKSD9jJiqFxY=",
       "System.Text.RegularExpressions.wasm": "sha256-6T86HiT8YsAKIA+RMZDNdVuNvepswzsJj5lTx3DHqQY=",
-      "TankTacticsReportViewer.wasm": "sha256-mzNVAw1GxflX23lIGAmNZLOkWDqgZbdIlZW2a5xDFds="
+      "TankTacticsReportViewer.wasm": "sha256-GFFlz6+fsQrpe97cvCo/fR55iT8CJqY7H7QcN3hRvMw="
     }
   },
   "cacheBootResources": true,
